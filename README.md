@@ -84,8 +84,27 @@ Cheaper primitive: `{ query, window_days?=7, max_sources?=10 }` → deduped mult
 3. **Syndication clustering** — near-identical headlines across different domains (Jaccard similarity ≥ 0.55) collapse into one origin; wire domains are flagged.
 4. **Verdict** — independent origins = distinct clusters. Confidence rises with origins and cross-engine agreement, falls for wide single-origin echoes. Every weakness the engine knows about goes in `notes`.
 
+## Measured accuracy — published because you should demand it from any fact-check tool
+
+Run against a 40-claim labeled benchmark ([benchmark/](benchmark/) — claims, labels, and harness are public; re-run it yourself with `npm run benchmark`). Latest run **2026-07-10**:
+
+| Metric | Result |
+|---|---|
+| Fabricated claims falsely CONFIRMED | **0/10** |
+| Fabricated claims returning any corroboration | 1/10 (one `SINGLE_SOURCE`, confidence 0.3) |
+| Widely-reported true claims missed | **0/12** (12/12 CONFIRMED) |
+| Niche true claims detected | 7/8 |
+| Stale claims correctly windowed | 3/5 |
+| **Distorted claims falsely CONFIRMED** | **3/5 — read the warning below** |
+| Latency | p50 0.4s · p95 8s (engine-outage worst case) |
+
+**⚠️ The distorted-claim number is the one to respect.** This tool measures whether independent reporting exists around a claim's topic and entities — it does **not** do stance detection. A distorted version of a real event ("OpenAI released GPT-6" when the real news is GPT-5.6; "the EPA *strengthened* rules" when it *weakened* them) can come back CONFIRMED because real coverage token-matches it. If your input may be adversarial or detail-critical, treat CONFIRMED as "this topic has independent coverage — now verify the specific details against the returned sources." Stance detection is the v1.1 roadmap item.
+
+Also measured: claims about **recurring events** (championships, elections) can match the current cycle's coverage — "Argentina won the World Cup in Qatar" (2022, true) confirms against 2026 tournament coverage — and old events with fresh retrospective/anniversary coverage can return `SINGLE_SOURCE`.
+
 ## Honest limitations
 
+- **No stance detection** — see the measured 3/5 above. CONFIRMED means independently *covered*, not independently *verified in every detail*.
 - English-language, headline-level analysis. Paywalled body text is not fetched.
 - Recency-biased: the default window is 7 days (max 90). Old claims come back `UNCORROBORATED` — that's a window statement, not a falsity verdict.
 - Two outlets independently rewriting the same wire story can occasionally slip past clustering; genuinely different phrasings of one origin may occasionally count as two.
@@ -97,7 +116,8 @@ Cheaper primitive: `{ query, window_days?=7, max_sources?=10 }` → deduped mult
 npm test              # golden-claim suite — deterministic, no network
 npm run test:mcp      # MCP stdio handshake + tools/list
 npm run test:live     # live invariants against real engines
-npm run test:release  # all of the above — run before every release
+npm run benchmark     # 40-claim labeled accuracy benchmark (live, ~2 min)
+npm run test:release  # all of the above — required green before every release
 ```
 
 MIT © Ezra Cohen

@@ -69,8 +69,8 @@ export async function gdelt(q, windowDays = 7, n = 15) {
     const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q + " sourcelang:english")}` +
       `&mode=artlist&format=json&maxrecords=${n}&timespan=${windowDays}d&sort=datedesc`;
     // GDELT is chronically slow (observed 2026-07: 10-15s responses, aggressive per-IP 429s).
-    // Longer timeout, NO retry — a 429 retry would stack another 10s onto the call.
-    const d = await get(url, true, 10000, 0);
+    // 8s keeps the p95<10s latency law; NO retry — a 429 retry would stack another timeout onto the call.
+    const d = await get(url, true, 8000, 0);
     gdeltBreaker.fails = 0;
     return { engine, items: (d.articles || []).map(a => ({
       title: a.title || "",
@@ -101,12 +101,17 @@ export async function hackernews(q, windowDays = 7, n = 10) {
   } catch (e) { return { engine, items: [], error: errMsg(e) }; }
 }
 
+// Legal floor (release law): the PAID hosted tier must exclude gray-ToS engines — set
+// CORROBORATE_ENGINES="gdelt,hackernews" on that deployment. Default = full set for local/OSS
+// (runs on the user's own machine). The verdict schema never changes with the mix.
+const ENABLED = new Set((process.env.CORROBORATE_ENGINES || "google-news,gdelt,hackernews").split(",").map(s => s.trim()).filter(Boolean));
+
 export async function searchAll(q, windowDays, perEngine) {
-  const runs = await Promise.all([
-    gnews(q, windowDays, perEngine),
-    gdelt(q, windowDays, perEngine),
-    hackernews(q, windowDays, Math.ceil(perEngine / 2)),
-  ]);
+  const jobs = [];
+  if (ENABLED.has("google-news")) jobs.push(gnews(q, windowDays, perEngine));
+  if (ENABLED.has("gdelt")) jobs.push(gdelt(q, windowDays, perEngine));
+  if (ENABLED.has("hackernews")) jobs.push(hackernews(q, windowDays, Math.ceil(perEngine / 2)));
+  const runs = await Promise.all(jobs);
   return {
     articles: runs.flatMap(r => r.items).filter(x => x.title && x.url),
     engine_errors: runs.filter(r => r.error).map(r => `${r.engine}: ${r.error}`),

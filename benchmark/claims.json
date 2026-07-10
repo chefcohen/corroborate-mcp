@@ -1,0 +1,52 @@
+{
+  "_about": "Labeled benchmark set for corroborate-mcp (release law: no release without published error rates).",
+  "_provenance": "True claims drawn 2026-07-10 from Google News top/section feeds + Hacker News front page, REPHRASED (never verbatim headlines) so keyword extraction and the relevance gate are genuinely exercised. Fabricated claims are invented. Stale claims are real pre-2026 events. Distorted claims take a real current event and invert or falsify one key fact.",
+  "_refresh_policy": "true_widely_reported / true_niche / distorted claims age out — refresh from current news roughly every 60 days (search window caps at 90d). fabricated and stale claims are evergreen.",
+  "_claims_added": "2026-07-10",
+  "claims": [
+    { "id": "W01", "category": "true_widely_reported", "claim": "The ceasefire between the US and Iran is collapsing amid new strikes in the Middle East" },
+    { "id": "W02", "category": "true_widely_reported", "claim": "OpenAI released GPT-5.6" },
+    { "id": "W03", "category": "true_widely_reported", "claim": "Fidji Simo is stepping down from leading OpenAI's AGI work because of illness" },
+    { "id": "W04", "category": "true_widely_reported", "claim": "Xbox CEO Asha Sharma will advise the Federal Reserve on jobs" },
+    { "id": "W05", "category": "true_widely_reported", "claim": "Trump removed the remaining members of the Election Assistance Commission ahead of the midterms" },
+    { "id": "W06", "category": "true_widely_reported", "claim": "Israel told the US that Iran hatched a fresh plot to kill Trump" },
+    { "id": "W07", "category": "true_widely_reported", "claim": "OpenAI is discontinuing ChatGPT Atlas, its standalone desktop browser" },
+    { "id": "W08", "category": "true_widely_reported", "claim": "The EPA proposed weakening pollution rules for heavy-duty trucks" },
+    { "id": "W09", "category": "true_widely_reported", "claim": "A Mexican man fatally shot by ICE was not the intended target" },
+    { "id": "W10", "category": "true_widely_reported", "claim": "Goldman Sachs limited prediction market betting for its employees" },
+    { "id": "W11", "category": "true_widely_reported", "claim": "A Chinese spacecraft reached Earth's quasi-moon in deep space" },
+    { "id": "W12", "category": "true_widely_reported", "claim": "Sony announced the RX10 V superzoom camera with 4K 120p video" },
+
+    { "id": "N01", "category": "true_niche", "claim": "The EU Parliament approved the Chat Control regulation" },
+    { "id": "N02", "category": "true_niche", "claim": "No leap second will be introduced at the end of December 2026" },
+    { "id": "N03", "category": "true_niche", "claim": "Postgres has been rewritten in Rust and passes the Postgres regression tests" },
+    { "id": "N04", "category": "true_niche", "claim": "Meta introduced Muse Spark, a new AI model" },
+    { "id": "N05", "category": "true_niche", "claim": "A patch for a Windows Defender zero-day could allow attackers to fill the hard disk" },
+    { "id": "N06", "category": "true_niche", "claim": "Tencent released Hy3" },
+    { "id": "N07", "category": "true_niche", "claim": "NASA is seeking volunteers for a year-long simulated Mars mission" },
+    { "id": "N08", "category": "true_niche", "claim": "Scientists sampled tephra from the crater wall at Kilauea's summit" },
+
+    { "id": "F01", "category": "fabricated", "claim": "Zorblatt Aeronautics acquired the Duchy of Grand Fenwick for 12 trillion dollars" },
+    { "id": "F02", "category": "fabricated", "claim": "Apple acquired Nintendo for 85 billion dollars" },
+    { "id": "F03", "category": "fabricated", "claim": "Nestle recalled all chocolate products worldwide over glass contamination" },
+    { "id": "F04", "category": "fabricated", "claim": "Canada announced it will adopt the euro as its national currency" },
+    { "id": "F05", "category": "fabricated", "claim": "SpaceX's Starship exploded on the launch pad this morning" },
+    { "id": "F06", "category": "fabricated", "claim": "Taylor Swift was appointed US ambassador to the United Nations" },
+    { "id": "F07", "category": "fabricated", "claim": "Microsoft is relocating its headquarters from Redmond to Austin" },
+    { "id": "F08", "category": "fabricated", "claim": "The WHO declared a global pandemic over a new virus called Marburg-X" },
+    { "id": "F09", "category": "fabricated", "claim": "Amazon announced it will accept Bitcoin as payment on all purchases" },
+    { "id": "F10", "category": "fabricated", "claim": "Greenland voted to become a US state in a referendum this week" },
+
+    { "id": "S01", "category": "real_but_stale", "claim": "The Ever Given container ship is blocking the Suez Canal" },
+    { "id": "S02", "category": "real_but_stale", "claim": "Silicon Valley Bank collapsed and was taken over by regulators" },
+    { "id": "S03", "category": "real_but_stale", "claim": "The Titan submersible imploded during a dive to the Titanic wreck" },
+    { "id": "S04", "category": "real_but_stale", "claim": "Argentina won the FIFA World Cup in Qatar" },
+    { "id": "S05", "category": "real_but_stale", "claim": "NASA's OSIRIS-REx capsule returned asteroid samples to Earth" },
+
+    { "id": "D01", "category": "distorted", "claim": "The US and Iran signed a permanent peace treaty today", "distortion": "reality: ceasefire is collapsing" },
+    { "id": "D02", "category": "distorted", "claim": "OpenAI released GPT-6", "distortion": "reality: GPT-5.6" },
+    { "id": "D03", "category": "distorted", "claim": "Fidji Simo was fired from OpenAI", "distortion": "reality: stepping down due to illness" },
+    { "id": "D04", "category": "distorted", "claim": "The EPA proposed strengthening heavy-duty truck pollution rules", "distortion": "reality: weakening — direct inversion" },
+    { "id": "D05", "category": "distorted", "claim": "The Federal Reserve cut interest rates to zero at an emergency meeting this week", "distortion": "real topic, fabricated event" }
+  ]
+}

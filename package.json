@@ -11,7 +11,8 @@
     "test": "node --test test/golden.test.js",
     "test:live": "node test/golden-live.js",
     "test:mcp": "node test/mcp-smoke.js",
-    "test:release": "npm test && npm run test:mcp && npm run test:live"
+    "benchmark": "node benchmark/run.js",
+    "test:release": "npm test && npm run test:mcp && npm run test:live && npm run benchmark"
   },
   "keywords": ["mcp", "mcp-server", "fact-check", "corroboration", "claim-verification", "news", "sources", "ai-agents", "model-context-protocol"],
   "engines": { "node": ">=18" },
