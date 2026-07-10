@@ -56,14 +56,22 @@ export async function gnews(q, windowDays = 7, n = 15) {
   } catch (e) { return { engine, items: [], error: errMsg(e) }; }
 }
 
+// Circuit breaker: GDELT has slow phases where no sane timeout catches it — after 2 consecutive
+// failures, skip it for 5 min (disclosed via engine_errors) instead of burning 10s on every call.
+const gdeltBreaker = { fails: 0, until: 0 };
+
 export async function gdelt(q, windowDays = 7, n = 15) {
   const engine = "gdelt";
+  if (Date.now() < gdeltBreaker.until) {
+    return { engine, items: [], error: "skipped — circuit open after repeated timeouts, retries in a few minutes" };
+  }
   try {
     const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q + " sourcelang:english")}` +
       `&mode=artlist&format=json&maxrecords=${n}&timespan=${windowDays}d&sort=datedesc`;
     // GDELT is chronically slow (observed 2026-07: 10-15s responses, aggressive per-IP 429s).
     // Longer timeout, NO retry — a 429 retry would stack another 10s onto the call.
     const d = await get(url, true, 10000, 0);
+    gdeltBreaker.fails = 0;
     return { engine, items: (d.articles || []).map(a => ({
       title: a.title || "",
       url: a.url || "",
@@ -71,7 +79,10 @@ export async function gdelt(q, windowDays = 7, n = 15) {
       published_at: a.seendate ? a.seendate.replace(/^(\d{4})(\d{2})(\d{2})T?(\d{2})(\d{2})(\d{2}).*$/, "$1-$2-$3T$4:$5:$6Z") : "",
       engine,
     })) };
-  } catch (e) { return { engine, items: [], error: errMsg(e) }; }
+  } catch (e) {
+    if (++gdeltBreaker.fails >= 2) gdeltBreaker.until = Date.now() + 5 * 60 * 1000;
+    return { engine, items: [], error: errMsg(e) };
+  }
 }
 
 export async function hackernews(q, windowDays = 7, n = 10) {
