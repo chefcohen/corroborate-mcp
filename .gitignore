@@ -1,0 +1,8 @@
+node_modules/
+logs/
+*.log
+.DS_Store
+
+# internal business docs — never publish
+PLAN.md
+PUBLISH.md

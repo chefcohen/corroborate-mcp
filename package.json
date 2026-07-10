@@ -1,0 +1,24 @@
+{
+  "name": "corroborate-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that tells AI agents how independently corroborated a claim is — sources, syndication-aware independence, and an honest confidence score.",
+  "type": "module",
+  "bin": { "corroborate-mcp": "src/server.js" },
+  "files": ["src", "README.md", "LICENSE"],
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node cli.js",
+    "test": "node --test test/golden.test.js",
+    "test:live": "node test/golden-live.js",
+    "test:mcp": "node test/mcp-smoke.js",
+    "test:release": "npm test && npm run test:mcp && npm run test:live"
+  },
+  "keywords": ["mcp", "mcp-server", "fact-check", "corroboration", "claim-verification", "news", "sources", "ai-agents", "model-context-protocol"],
+  "engines": { "node": ">=18" },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "fast-xml-parser": "^4.5.0",
+    "zod": "^3.23.0"
+  }
+}
