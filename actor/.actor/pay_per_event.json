@@ -1,0 +1,12 @@
+{
+    "actor-start": {
+        "eventTitle": "Actor start",
+        "eventDescription": "Nominal fee for starting the Actor (standby boots are rare; verdicts are the product).",
+        "eventPriceUsd": 0.005
+    },
+    "tool-request": {
+        "eventTitle": "Claim corroboration verdict (tool call)",
+        "eventDescription": "One corroborate_claim or find_sources tool call — an honest, syndication-aware verdict with sources. Discovery (tools/list etc.) is free.",
+        "eventPriceUsd": 0.05
+    }
+}

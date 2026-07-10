@@ -1,0 +1,23 @@
+{
+	"$schema": "https://apify.com/schemas/v1/actor.ide.json",
+	"actorSpecification": 1,
+	"name": "corroborate-mcp",
+	"title": "Corroborate — claim corroboration for AI agents (MCP)",
+	"description": "Hands your agent an honest verdict on how independently corroborated a claim is: syndication-aware source counting, relevance gate, published error rates. Measures reporting corroboration, not truth — and says so.",
+	"version": "0.1",
+	"buildTag": "latest",
+	"usesStandbyMode": true,
+	"meta": {
+		"templateId": "ts-mcp-proxy"
+	},
+	"input": {
+		"title": "Actor input schema",
+		"description": "This Actor runs in standby mode as an MCP server; it takes no run input.",
+		"type": "object",
+		"schemaVersion": 1,
+		"properties": {},
+		"required": []
+	},
+	"dockerfile": "../Dockerfile",
+	"webServerMcpPath": "/mcp"
+}

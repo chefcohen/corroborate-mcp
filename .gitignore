@@ -6,3 +6,8 @@ logs/
 # internal business docs — never publish
 PLAN.md
 PUBLISH.md
+
+# actor build artifacts
+actor/node_modules/
+actor/dist/
+actor/storage/

@@ -1,0 +1,41 @@
+{
+    "name": "corroborate-mcp-actor",
+    "version": "0.1.0",
+    "type": "module",
+    "description": "Apify actor wrapper for corroborate-mcp \u2014 hosted MCP server selling honest claim-corroboration verdicts, pay-per-event.",
+    "engines": {
+        "node": ">=20.0.0"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.17.5",
+        "apify": "^3.7.0",
+        "body-parser": "^2.2.0",
+        "express": "^5.1.0",
+        "zod": "^3.25.76",
+        "corroborate-mcp": "^0.1.0"
+    },
+    "devDependencies": {
+        "@apify/eslint-config": "^2.0.0",
+        "@apify/tsconfig": "^0.1.1",
+        "@types/body-parser": "^1.19.5",
+        "@types/express": "^5.0.2",
+        "@types/node": "^24.0.0",
+        "eslint": "^9.29.0",
+        "eslint-config-prettier": "^10.1.5",
+        "globals": "^17.0.0",
+        "prettier": "^3.5.3",
+        "tsx": "^4.20.3",
+        "typescript": "^6.0.0",
+        "typescript-eslint": "^8.58.0",
+        "vitest": "^4.1.0"
+    },
+    "scripts": {
+        "start": "npm run start:dev",
+        "start:prod": "node dist/main.js",
+        "start:dev": "tsx src/main.ts",
+        "build": "tsc",
+        "test": "vitest run"
+    },
+    "author": "Ezra Cohen",
+    "license": "MIT"
+}
