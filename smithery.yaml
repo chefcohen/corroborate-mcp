@@ -1,0 +1,10 @@
+# Smithery registry config — https://smithery.ai/docs
+startCommand:
+  type: stdio
+  configSchema:
+    # No config needed: keyless engines, zero setup.
+    type: object
+    properties: {}
+  commandFunction: |-
+    (config) => ({ command: 'node', args: ['src/server.js'] })
+  exampleConfig: {}
