@@ -2,7 +2,7 @@
 // a network outage must be distinguishable from "nobody reports this claim" (honesty requirement).
 import { XMLParser } from "fast-xml-parser";
 
-const UA = { "User-Agent": "corroborate-mcp/0.1 (+https://github.com/corroborate-mcp)" };
+const UA = { "User-Agent": "corroborate-mcp/0.1 (+https://github.com/chefcohen/corroborate-mcp)" };
 const xml = new XMLParser({ ignoreAttributes: false });
 
 // Small TTL cache: repeated checks of the same claim within minutes hit the network once.
