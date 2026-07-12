@@ -12,3 +12,6 @@ actor/node_modules/
 actor/dist/
 actor/storage/
 REGISTRY-DRAFTS.md
+
+# benchmark run outputs (generated; reproduce via `npm run benchmark`)
+benchmark/results-*.json
