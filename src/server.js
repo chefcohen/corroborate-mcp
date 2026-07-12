@@ -9,12 +9,17 @@ const server = new McpServer({ name: "corroborate", version: "0.1.0" });
 
 server.registerTool("corroborate_claim", {
   title: "Corroborate a claim",
-  description: "Check how independently corroborated a claim is. Returns a syndication-aware verdict " +
-    "(CONFIRMED / SINGLE_SOURCE / UNCORROBORATED), the number of INDEPENDENT story origins (wire echoes collapse " +
-    "to one), per-source evidence with dates, a confidence score, and honest caveats. Measures reporting " +
-    "corroboration, not truth.",
+  // Agent-first description: what it does, WHEN to call it, what it returns, the one honest caveat,
+  // and the trust signal — dense and decision-useful (agents pay a context-token tax for verbose metadata).
+  description: "Given a factual/news claim, returns how INDEPENDENTLY it is being reported. Use before " +
+    "relying on a current-event claim. Output: verdict (CONFIRMED = 2+ independent origins | SINGLE_SOURCE | " +
+    "UNCORROBORATED), count of independent story origins (wire/syndication echoes collapse to one), per-source " +
+    "evidence (outlet, domain, url, date), confidence 0-1, coverage flag, honest caveats. Measures REPORTING " +
+    "corroboration, not truth — no stance detection, so a distorted claim about a real event may still show " +
+    "coverage; verify specifics against the returned sources. Keyless, read-only, deterministic; if all sources " +
+    "are unreachable it errors rather than returning a false negative.",
   inputSchema: {
-    claim: z.string().describe("The claim to check, as a plain sentence"),
+    claim: z.string().describe("The claim to check, as a plain declarative sentence"),
     window_days: z.number().int().min(1).max(90).optional().describe("Lookback window in days (default 7)"),
     max_sources: z.number().int().min(1).max(20).optional().describe("Max evidence sources returned (default 8)"),
   },
@@ -30,8 +35,9 @@ server.registerTool("corroborate_claim", {
 
 server.registerTool("find_sources", {
   title: "Find sources",
-  description: "Raw multi-engine source search (Google News, GDELT, Hacker News) for a query — deduped list with " +
-    "outlet, domain, date. Cheaper primitive when you just need coverage, not a verdict.",
+  description: "Multi-engine news/source search (Google News, GDELT, Hacker News) for a query: a deduped list of " +
+    "{outlet, domain, url, date}. Use when you want raw coverage to judge yourself, not a scored verdict — the " +
+    "cheaper primitive under corroborate_claim. Keyless, read-only.",
   inputSchema: {
     query: z.string().describe("Search query or claim"),
     window_days: z.number().int().min(1).max(90).optional(),

@@ -16,3 +16,4 @@ REGISTRY-DRAFTS.md
 # benchmark run outputs (generated; reproduce via `npm run benchmark`)
 benchmark/results-*.json
 LAUNCH-CARD.md
+PACKAGING.md
