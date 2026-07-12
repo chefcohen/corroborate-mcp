@@ -1,8 +1,19 @@
 {
   "_about": "Labeled benchmark set for corroborate-mcp (release law: no release without published error rates).",
-  "_provenance": "True claims drawn 2026-07-10 from Google News top/section feeds + Hacker News front page, REPHRASED (never verbatim headlines) so keyword extraction and the relevance gate are genuinely exercised. Fabricated claims are invented. Stale claims are real pre-2026 events. Distorted claims take a real current event and invert or falsify one key fact.",
+  "_category_definitions": {
+    "_note": "PERMANENT GATE (Adam ruling 2026-07-12). These boundaries are law. NO claim may be recategorized without escalating to Adam — this written definition is what stops the benchmark from ever being quietly edited-to-pass.",
+    "true_widely_reported": "Real, currently true, covered by many independent outlets.",
+    "true_niche": "Real and currently true, but narrowly covered (few outlets / specialist).",
+    "fabricated": "The ENTITY has no real referent — a fictional company / person / product / event that does not exist. Tests entity-fabrication.",
+    "real_but_stale": "A real past event, true when it happened, now outside the default window. Tests recency-windowing.",
+    "distorted": "A REAL entity + a FALSE claim/event about it (inversion, wrong figure, invented action). Tests stance-blindness. NOTE: entity-real/event-fake is distorted, NOT fabricated."
+  },
+  "_provenance": "True claims drawn 2026-07-10 from Google News top/section feeds + Hacker News front page, REPHRASED (never verbatim headlines) so keyword extraction and the relevance gate are genuinely exercised. Fabricated claims are invented with no real referent. Stale claims are real pre-2026 events. Distorted claims take a real current entity and falsify one key fact/event.",
   "_refresh_policy": "true_widely_reported / true_niche / distorted claims age out — refresh from current news roughly every 60 days (search window caps at 90d). fabricated and stale claims are evergreen.",
   "_claims_added": "2026-07-10",
+  "_changelog": [
+    "2026-07-12: F05 ('SpaceX Starship exploded on the launch pad') moved fabricated->distorted (now D06) per Adam ruling — real entity + false event is distorted by definition; it was mislabeled at build time and graded WEAK on day one. Backfilled fabricated with F11 (entity-fake) to keep the bucket at 10. Category definitions written in above as a permanent gate."
+  ],
   "claims": [
     { "id": "W01", "category": "true_widely_reported", "claim": "The ceasefire between the US and Iran is collapsing amid new strikes in the Middle East" },
     { "id": "W02", "category": "true_widely_reported", "claim": "OpenAI released GPT-5.6" },
@@ -30,7 +41,7 @@
     { "id": "F02", "category": "fabricated", "claim": "Apple acquired Nintendo for 85 billion dollars" },
     { "id": "F03", "category": "fabricated", "claim": "Nestle recalled all chocolate products worldwide over glass contamination" },
     { "id": "F04", "category": "fabricated", "claim": "Canada announced it will adopt the euro as its national currency" },
-    { "id": "F05", "category": "fabricated", "claim": "SpaceX's Starship exploded on the launch pad this morning" },
+    { "id": "F11", "category": "fabricated", "claim": "Meridian Dynamics unveiled a room-temperature superconductor at its Zurich headquarters" },
     { "id": "F06", "category": "fabricated", "claim": "Taylor Swift was appointed US ambassador to the United Nations" },
     { "id": "F07", "category": "fabricated", "claim": "Microsoft is relocating its headquarters from Redmond to Austin" },
     { "id": "F08", "category": "fabricated", "claim": "The WHO declared a global pandemic over a new virus called Marburg-X" },
@@ -47,6 +58,7 @@
     { "id": "D02", "category": "distorted", "claim": "OpenAI released GPT-6", "distortion": "reality: GPT-5.6" },
     { "id": "D03", "category": "distorted", "claim": "Fidji Simo was fired from OpenAI", "distortion": "reality: stepping down due to illness" },
     { "id": "D04", "category": "distorted", "claim": "The EPA proposed strengthening heavy-duty truck pollution rules", "distortion": "reality: weakening — direct inversion" },
-    { "id": "D05", "category": "distorted", "claim": "The Federal Reserve cut interest rates to zero at an emergency meeting this week", "distortion": "real topic, fabricated event" }
+    { "id": "D05", "category": "distorted", "claim": "The Federal Reserve cut interest rates to zero at an emergency meeting this week", "distortion": "real topic, fabricated event" },
+    { "id": "D06", "category": "distorted", "claim": "SpaceX's Starship exploded on the launch pad this morning", "distortion": "real entity (SpaceX/Starship) + false event; matches real launch coverage — the canonical stance-blindness case (was F05)" }
   ]
 }

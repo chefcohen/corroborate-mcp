@@ -59,12 +59,20 @@ export async function gnews(q, windowDays = 7, n = 15) {
 // Circuit breaker: GDELT has slow phases where no sane timeout catches it — after 2 consecutive
 // failures, skip it for 5 min (disclosed via engine_errors) instead of burning 10s on every call.
 const gdeltBreaker = { fails: 0, until: 0 };
+// GDELT's published quota is 1 request per 5s per IP (sustained violations earn ~15-min blocks):
+// https://blog.gdeltproject.org/behind-the-scenes-api-quotas-the-impact-of-a-fraction-of-a-qps/
+// Space our own requests client-side rather than getting this IP blocked.
+let gdeltLastAttempt = 0;
 
 export async function gdelt(q, windowDays = 7, n = 15) {
   const engine = "gdelt";
   if (Date.now() < gdeltBreaker.until) {
     return { engine, items: [], error: "skipped — circuit open after repeated timeouts, retries in a few minutes" };
   }
+  if (Date.now() - gdeltLastAttempt < 5000) {
+    return { engine, items: [], error: "skipped — spacing requests to GDELT's 1-per-5s-per-IP quota" };
+  }
+  gdeltLastAttempt = Date.now();
   try {
     const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q + " sourcelang:english")}` +
       `&mode=artlist&format=json&maxrecords=${n}&timespan=${windowDays}d&sort=datedesc`;

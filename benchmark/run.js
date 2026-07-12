@@ -46,6 +46,12 @@ for (const c of claims) {
   await new Promise(r => setTimeout(r, GAP_MS));
 }
 
+// Local date, not UTC: a late-evening run (past ~21:00 in UTC+3) would otherwise stamp the PREVIOUS
+// day's filename and silently overwrite it (real data loss, observed 2026-07-12).
+const localDate = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
 const by = cat => results.filter(r => r.category === cat);
 const count = (rows, g) => rows.filter(r => r.grade === g).length;
 const lat = results.filter(r => r.ms != null).map(r => r.ms).sort((a, b) => a - b);
@@ -53,7 +59,7 @@ const pct = p => lat[Math.min(lat.length - 1, Math.floor(p * lat.length))];
 
 const W = by("true_widely_reported"), N = by("true_niche"), F = by("fabricated"), S = by("real_but_stale"), D = by("distorted");
 const summary = {
-  date: new Date().toISOString().slice(0, 10),
+  date: localDate(),
   n_claims: results.length,
   fabricated_false_confirmed: `${count(F, "FAIL")}/${F.length}`,
   fabricated_any_corroboration: `${count(F, "FAIL") + count(F, "WEAK")}/${F.length}`,
