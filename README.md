@@ -9,7 +9,7 @@
 ![MCP](https://img.shields.io/badge/MCP-server-blue)
 ![API keys](https://img.shields.io/badge/API%20keys-0-brightgreen)
 
-> An AP story echoed by 40 outlets is **one** origin, not 40. Counting that correctly — syndication-aware — is the judgment layer raw web search doesn't give you.
+> An AP story echoed by 40 outlets is **one** origin, not 40 citations. Other verifiers count citations; Corroborate counts independent *origins* — syndication-aware — then publishes its own error rates and discloses coverage gaps. That's the judgment layer raw search and citation-checkers skip.
 
 ```text
 corroborate_claim("NASA delayed the Artemis III landing")   → CONFIRMED       4 independent origins · conf 0.9
