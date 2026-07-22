@@ -91,18 +91,18 @@ npx corroborate-mcp   # starts the stdio server (silent = healthy)
 `{ query, window_days?=7, max_sources?=10 }` → deduped multi-engine list (outlet, domain, url, date), no verdict. The cheaper primitive when you want the coverage and your own judgment.
 
 ## Measured accuracy — because you should demand it from any fact-check tool
-Against a public 40-claim labeled benchmark ([benchmark/](benchmark/) — claims, labels, category definitions, and harness are all public; run it yourself with `npm run benchmark`). Latest run **2026-07-12**:
+Against a public 40-claim labeled benchmark ([benchmark/](benchmark/) — claims, labels, category definitions, and harness are all public; run it yourself with `npm run benchmark`). The time-sensitive claims are refreshed from current news so the numbers reflect real accuracy, not staleness. Latest run **2026-07-22**:
 
 | Metric | Result |
 |---|---|
 | Fabricated claims falsely CONFIRMED | **0/10** |
-| Widely-reported true claims missed | **0/12** (12/12 CONFIRMED) |
+| Widely-reported true claims missed | **0/12** (11 CONFIRMED, 1 single-source) |
 | Niche true claims detected | 7/8 |
-| Stale claims correctly windowed | 3/5 |
-| **Distorted claims falsely CONFIRMED** | **4/6 — read the warning ↓** |
-| Latency | p50 0.4s · p95 ≤8s (engine-outage worst case) |
+| Stale claims correctly windowed | 2/5 |
+| **Distorted claims falsely CONFIRMED** | **6/6 — read the warning ↓** |
+| Latency | p50 0.4s · p95 <1s (≤8s worst case when the slow engine is up) |
 
-**⚠️ Respect the distorted-claim number.** This tool checks whether independent reporting exists around a claim's topic and entities — it does **not** do stance detection. A distorted version of a real event ("OpenAI released GPT-6" when it's GPT-5.6; "the EPA *strengthened* rules" when it *weakened* them) can come back CONFIRMED because real coverage token-matches it. For adversarial or detail-critical input, read CONFIRMED as *"this topic has independent coverage — now check the specifics against the returned sources."* Stance detection is on the v1.1 roadmap. (Recurring events like championships/elections can likewise match the current cycle's coverage.)
+**⚠️ Respect the distorted-claim number — it's the honest ceiling of this tool's blind spot.** In the latest run **all 6 distorted claims came back CONFIRMED (6/6)**, because each one distorts a *currently-reported* event, and this tool checks whether independent reporting exists around a claim's topic and entities — it does **not** do stance detection. So "Samsung *cancelled* the Galaxy Z Fold8" (they unveiled it) or "OpenAI released GPT-6" confirms off the real coverage of the true story. **The rule to live by: if a claim's topic is being reported, a distorted version of it will very likely CONFIRM.** Read CONFIRMED as *"this topic has independent coverage — now verify the specific facts against the returned sources,"* never as "this exact claim is true." Stance detection is the v1.1 roadmap item. (Recurring events like championships/elections can likewise match the current cycle's coverage — see the stale-claim leaks.)
 
 ## How the judgment works
 1. **Search** Google News RSS, GDELT, Hacker News in parallel (keywords extracted from the claim; quoted phrases preserved).
@@ -111,7 +111,7 @@ Against a public 40-claim labeled benchmark ([benchmark/](benchmark/) — claims
 4. **Verdict** — independent origins = distinct clusters; confidence rises with origins + cross-engine agreement, falls for wide single-origin echoes; every known weakness goes in `notes`.
 
 ## Honest limitations
-- **No stance detection** (the 4/6 above). CONFIRMED = independently *covered*, not verified in every detail.
+- **No stance detection** (the 6/6 above). CONFIRMED = independently *covered*, not verified in every detail.
 - English-language, headline-level. Paywalled body text isn't fetched.
 - Recency-windowed (default 7 days, max 90). Old claims read `UNCORROBORATED` — a window statement, not a falsity verdict.
 - Independent rewrites of one wire story can occasionally slip clustering; distinct phrasings of one origin can occasionally count as two.
