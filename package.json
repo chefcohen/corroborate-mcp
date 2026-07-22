@@ -1,11 +1,17 @@
 {
   "name": "corroborate-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "mcpName": "io.github.chefcohen/corroborate-mcp",
-  "description": "MCP server that tells AI agents how independently corroborated a claim is — sources, syndication-aware independence, and an honest confidence score.",
+  "description": "MCP server that tells AI agents how independently corroborated a claim is \u2014 sources, syndication-aware independence, and an honest confidence score.",
   "type": "module",
-  "bin": { "corroborate-mcp": "src/server.js" },
-  "files": ["src", "README.md", "LICENSE"],
+  "bin": {
+    "corroborate-mcp": "src/server.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node src/server.js",
     "check": "node cli.js",
@@ -15,11 +21,28 @@
     "benchmark": "node benchmark/run.js",
     "test:release": "npm test && npm run test:mcp && npm run test:live && npm run benchmark"
   },
-  "keywords": ["mcp", "mcp-server", "fact-check", "corroboration", "claim-verification", "news", "sources", "ai-agents", "model-context-protocol"],
-  "repository": { "type": "git", "url": "git+https://github.com/chefcohen/corroborate-mcp.git" },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "fact-check",
+    "corroboration",
+    "claim-verification",
+    "news",
+    "sources",
+    "ai-agents",
+    "model-context-protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chefcohen/corroborate-mcp.git"
+  },
   "homepage": "https://github.com/chefcohen/corroborate-mcp#readme",
-  "bugs": { "url": "https://github.com/chefcohen/corroborate-mcp/issues" },
-  "engines": { "node": ">=18" },
+  "bugs": {
+    "url": "https://github.com/chefcohen/corroborate-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
