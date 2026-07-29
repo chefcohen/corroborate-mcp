@@ -1,0 +1,18 @@
+# MCPB pack excludes — keep bundle to the local stdio runtime only
+actor/
+benchmark/
+test/
+.git/
+*.log
+logs/
+market-research/
+# internal, git-ignored docs (not for the bundle)
+PLAN.md
+PUBLISH.md
+PUBLISH-DAY.md
+PACKAGING.md
+LAUNCH-CARD.md
+REGISTRY-DRAFTS.md
+DEBT.md
+.mcpbignore
+server.mcpb

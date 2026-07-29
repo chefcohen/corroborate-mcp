@@ -67,7 +67,13 @@ export function assess(claim, rawResults, {
   const n = clusters.length;
   const engines = new Set(results.map(r => r.engine));
   const ages = results.map(r => r.age_days).filter(x => x != null);
-  const allSameDay = ages.length >= 2 && Math.max(...ages) - Math.min(...ages) < 1.0;
+  // HONESTY: these are two DIFFERENT facts and must not be conflated (defect fixed 2026-07-29).
+  // tightWindow = everything published within ~24h OF EACH OTHER (a spread) -> simultaneity/cascade signal.
+  // allRecent   = everything is genuinely <24h OLD (an age) -> the only basis for claiming recency.
+  // The old code measured spread but the emitted note asserted age, so 5-day-old clustered coverage
+  // was reported to callers as "<24h old" — a false statement in the response body.
+  const tightWindow = ages.length >= 2 && Math.max(...ages) - Math.min(...ages) < 1.0;
+  const allRecent = ages.length >= 1 && Math.max(...ages) < 1.0;
   const degraded = engine_errors.length > 0;
 
   let confidence = n >= 3 ? 0.8 : n === 2 ? 0.6 : n === 1 ? 0.3 : 0.05;
@@ -78,9 +84,16 @@ export function assess(claim, rawResults, {
   const notes = [];
   if (degraded) notes.push(`incomplete coverage: ${engine_errors.length} of ${n_engines} source engine(s) failed (${engine_errors.join("; ")}) — a weak result may reflect the outage, not the claim`);
   if (clusters.some(c => c.syndicated)) notes.push("syndication detected: near-identical headlines across multiple domains were collapsed into one origin");
-  if (allSameDay && n >= 1) notes.push("all coverage is <24h old — breaking-news cascade; independence is weaker than the source count suggests");
+  if (tightWindow && n >= 1) notes.push(
+    allRecent
+      ? "all coverage is <24h old AND published within ~24h of itself — breaking-news cascade; independence is weaker than the source count suggests"
+      : "all coverage was published within ~24h of itself (though the story is older than 24h) — breaking-news cascade; outlets reacting simultaneously, so independence is weaker than the source count suggests");
   if (n === 0) notes.push("no dated coverage found in the window — the claim may be older than the window, misphrased, or unreported");
   if (n_discarded > 0) notes.push(`${n_discarded} loosely-related article(s) found but discarded by the relevance gate (they mention the topic, not the claim)`);
+  // HONESTY: n_independent_sources counts ALL origins but sources[] is truncated to max_sources, so a
+  // caller could see 8 items beside a claim of 15 with no way to audit the gap. Disclose it (fixed 2026-07-29).
+  const n_shown = Math.min(n, max_sources);
+  if (n > n_shown) notes.push(`showing ${n_shown} of ${n} independent sources — sources[] is truncated to max_sources (${max_sources}); raise max_sources to audit the full count`);
 
   return {
     claim,
@@ -88,6 +101,7 @@ export function assess(claim, rawResults, {
     window_days,
     corroboration: n >= 2 ? "CONFIRMED" : n === 1 ? "SINGLE_SOURCE" : "UNCORROBORATED",
     n_independent_sources: n,
+    n_sources_returned: n_shown,   // agent-first: sources[] may be truncated; this says so without counting
     confidence,
     coverage: degraded ? "degraded" : "full",
     sources: clusters.slice(0, max_sources).map(c => ({

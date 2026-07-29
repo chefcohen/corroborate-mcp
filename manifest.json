@@ -1,0 +1,55 @@
+{
+  "manifest_version": "0.3",
+  "name": "corroborate-mcp",
+  "display_name": "Corroborate",
+  "version": "0.1.2",
+  "description": "Honest claim corroboration for AI agents: syndication-aware independent-source counting, confidence scores, and published error rates. Keyless, read-only, open source.",
+  "long_description": "Corroborate tells an AI agent how INDEPENDENTLY a factual/news claim is being reported. It collapses wire/syndication echoes to a single origin, applies a relevance gate, and returns an honest verdict (CONFIRMED = 2+ independent origins | SINGLE_SOURCE | UNCORROBORATED) with per-source evidence, a confidence score, a coverage flag, and plain-English caveats. It measures reporting corroboration, not truth (no stance detection). Keyless and read-only; if all sources are unreachable it errors rather than returning a false negative. Published benchmark error rates ship in the README.",
+  "author": {
+    "name": "chefcohen",
+    "url": "https://github.com/chefcohen"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chefcohen/corroborate-mcp"
+  },
+  "homepage": "https://www.npmjs.com/package/corroborate-mcp",
+  "documentation": "https://github.com/chefcohen/corroborate-mcp#readme",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "fact-check",
+    "claim-verification",
+    "corroboration",
+    "source-verification",
+    "news",
+    "ai-agents",
+    "llm-tools"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "src/server.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/src/server.js"],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "corroborate_claim",
+      "description": "Given a factual/news claim, returns how independently it is being reported: verdict, independent-origin count, per-source evidence, confidence, coverage flag, and honest caveats."
+    },
+    {
+      "name": "find_sources",
+      "description": "Multi-engine news/source search (Google News, GDELT, Hacker News) for a query: a deduped list of {outlet, domain, url, date} for you to judge yourself."
+    }
+  ],
+  "compatibility": {
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "corroborate-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "mcpName": "io.github.chefcohen/corroborate-mcp",
   "description": "MCP server that tells AI agents how independently corroborated a claim is \u2014 sources, syndication-aware independence, and an honest confidence score.",
   "type": "module",

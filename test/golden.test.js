@@ -122,3 +122,61 @@ test("core tokens ignore short words and stopwords", () => {
   assert.ok(!core.includes("for") && !core.includes("2"));
   assert.deepEqual(normTitle("The Cat AND the Hat!"), ["cat", "hat"]);
 });
+
+// --- DEFECT FIXES 2026-07-29: two customer-facing honesty defects (Adam-flagged, verified at source) ---
+
+test("DEFECT-1: old-but-clustered coverage must NOT be reported as '<24h old'", () => {
+  // 5 days old, published within ~4h of each other: tight SPREAD, but NOT recent.
+  // Old code emitted "all coverage is <24h old" — a false statement to a paying caller.
+  const v = assess(CLAIM, [
+    art({ title: "Acme Corp to acquire Widget Industries in $2 billion deal", domain: "nytimes.com", age: 5.0 }),
+    art({ title: "Widget Industries bought by Acme for billions, sources say", domain: "ft.com", engine: "gdelt", age: 5.15 }),
+  ]);
+  const cascade = v.notes.find(n => n.includes("breaking-news cascade"));
+  assert.ok(cascade, "cascade should still be detected (tight publication window)");
+  assert.ok(!cascade.includes("<24h old"), "must NOT claim the coverage is <24h old when it is 5 days old");
+  assert.ok(cascade.includes("older than 24h"), "must state the story is older than 24h");
+});
+
+test("DEFECT-1: genuinely fresh clustered coverage MAY state <24h old", () => {
+  const v = assess(CLAIM, [
+    art({ title: "Acme Corp to acquire Widget Industries in $2 billion deal", domain: "nytimes.com", age: 0.2 }),
+    art({ title: "Widget Industries bought by Acme for billions, sources say", domain: "ft.com", engine: "gdelt", age: 0.6 }),
+  ]);
+  const cascade = v.notes.find(n => n.includes("breaking-news cascade"));
+  assert.ok(cascade && cascade.includes("<24h old"), "genuinely recent coverage may truthfully claim <24h old");
+});
+
+test("DEFECT-2: truncated sources[] must be disclosed and machine-readable", () => {
+  // 12 distinct origins, max_sources 3 -> caller must be able to audit the gap.
+  // Titles must be genuinely DISSIMILAR or our own syndication clustering (correctly) collapses them
+  // into one origin — which is exactly what happened on the first draft of this test.
+  const WORDINGS = [
+    "Acme Corp acquires Widget Industries for $2 billion",
+    "Widget purchase completed by Acme in landmark transaction",
+    "Regulators review the Acme Widget merger agreement",
+    "Analysts weigh Acme takeover of Widget manufacturing arm",
+    "Widget shareholders approve billion-dollar Acme offer",
+    "Acme expands portfolio through Widget acquisition deal",
+    "Antitrust questions raised over Acme Widget consolidation",
+    "Widget Industries staff briefed on Acme ownership change",
+    "Acme financing structure for Widget purchase detailed",
+    "Widget brand to continue operating under Acme control",
+    "Market reacts to Acme Widget billion dollar agreement",
+    "Acme executives defend Widget acquisition price tag",
+  ];
+  const many = WORDINGS.map((t, i) => art({ title: t, domain: `outlet${i}.com`, age: 1 + i * 0.5 }));
+  const v = assess(CLAIM, many, { max_sources: 3 });
+  assert.equal(v.sources.length, 3, "sources[] truncated to max_sources");
+  assert.ok(v.n_independent_sources > v.sources.length, "count exceeds shown (the auditability gap)");
+  assert.equal(v.n_sources_returned, 3, "n_sources_returned must report what was actually returned");
+  assert.ok(v.notes.some(n => n.includes("truncated to max_sources")), "the gap must be disclosed in notes");
+});
+
+test("DEFECT-2: no truncation note when everything is shown", () => {
+  const v = assess(CLAIM, [
+    art({ title: "Acme Corp to acquire Widget Industries in $2 billion deal", domain: "nytimes.com", age: 1 }),
+  ]);
+  assert.equal(v.n_sources_returned, v.n_independent_sources, "no gap when nothing is truncated");
+  assert.ok(!v.notes.some(n => n.includes("truncated to max_sources")), "must not cry truncation when none occurred");
+});
